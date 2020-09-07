@@ -1,11 +1,39 @@
 package edu.wm.cs.cs301.game2048;
 
+import java.util.Arrays;
+
 public class State implements GameState {
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(boardPositions);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		State other = (State) obj;
+		if (!Arrays.equals(boardPositions, other.boardPositions))
+			return false;
+		return true;
+	}
 
 	int boardPositions[] = new int [16];
 	public State(State currentState) {
 		// new State inherits currentState's board positions
-		boardPositions = currentState.boardPositions;
+		int new_arr[] = new int [16];
+		for (int i = 0; i < currentState.boardPositions.length; i++) {
+			new_arr[i] = currentState.boardPositions[i];
+		}
+		boardPositions = new_arr;
 	}
 	
 	public State() {
@@ -274,16 +302,6 @@ public class State implements GameState {
 			}
 		}
 		return sum;
-	}
-	
-	public boolean equals(State o) {
-		// if the values on the boards are equal at the same coordinates, return true
-		for (int i = 0; i < boardPositions.length; i++) {
-			if (boardPositions[i] != o.boardPositions[i]) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 }
