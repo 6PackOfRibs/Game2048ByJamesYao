@@ -9,7 +9,7 @@ public class State implements GameState {
 	}
 	
 	public State() {
-		// contains the values at the positions
+		// no code necessary, boardPositions is instantiated outside of constructor
 	}
 
 	@Override
@@ -22,7 +22,6 @@ public class State implements GameState {
 	public void setValue(int x, int y, int value) {
 		// sets value at (x,y) position
 		boardPositions[x + (4 * y)] = value;
-		
 	}
 
 	@Override
@@ -82,20 +81,104 @@ public class State implements GameState {
 
 	@Override
 	public boolean canMerge() {
-		// TODO Auto-generated method stub
+		// check every row and column to see if there are identical values
+		// check every row
+		for (int y = 0; y < 4; y++) {
+			for (int x = 0; x < 4; x++) {
+				// check if value x is equal to any values before it
+				for (int i = 0; i < x; i++) {
+					if (getValue(x, y) != 0 && getValue(i, y) == getValue(x, y)) {
+						// if adjacent, it can be merged
+						if (i == x-1) {
+							return true;
+						}
+						// if not adjacent, check if there are interfering values
+						if (i == x-2) {
+							if (getValue(i+1, y) == 0 || getValue(i+1, y) == getValue(x, y)) {
+								return true;
+							}
+						}
+						if (i == x-3) {
+							if (getValue(i+1, y) == 0 || getValue(i+1, y) == getValue(x, y)) {
+								if (getValue(i+2, y) == 0 || getValue(i+2, y) == getValue(x, y)) {
+									return true;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		//check every column
+		for (int x = 0; x < 4; x++) {
+			for (int y = 0; y < 4; y++) {
+				// check if value y is equal to any values before it
+				for (int i = 0; i < y; i++) {
+					if (getValue(x, y) != 0 && getValue(x, i) == getValue(x, y)) {
+						// if adjacent, it can be merged
+						if (i == y-1) {
+							return true;
+						}
+						// if not adjacent, check if there are interfering values
+						if (i == y-2) {
+							if (getValue(x, i+1) == 0 || getValue(x, i+1) == getValue(x, y)) {
+								return true;
+							}
+						}
+						if (i == y-3) {
+							if (getValue(x, i+1) == 0 || getValue(x, i+1) == getValue(x, y)) {
+								if (getValue(x, i+2) == 0 || getValue(x, i+2) == getValue(x, y)) {
+									return true;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 		return false;
 	}
 
 	@Override
 	public boolean reachedThreshold() {
-		// TODO Auto-generated method stub
+		// iterates through positions to see if game is won
+		for (int i = 0; i < boardPositions.length; i++) {
+			if (boardPositions[i] >= 2048) {
+				return true;
+			}
+		}
 		return false;
 	}
 
 	@Override
 	public int left() {
-		// TODO Auto-generated method stub
-		return 0;
+		//track sum to return at end
+		int sum = 0;
+		// moves every value to the left, and merges values if they can be merged
+		for (int y = 0; y < 4; y++) {
+			for (int x = 1; x < 4; x++) {
+				// when value is found, check values to its left
+				if (getValue(x, y) != 0) {
+					//saves the current value
+					int current_val = getValue(x, y);
+					for (int i = x-1; i >= 0; i--) {
+						// if left value is zero, switch values
+						if (getValue(i, y) == 0) {
+							setValue(i, y, current_val);
+							setValue(i+1, y, 0);
+						}
+						// if values can merge: merge and add value to sum
+						else if (getValue(i, y) == current_val) {
+							setValue(i, y, 2*current_val);
+							setValue(i+1, y, 0);
+							sum += 2*current_val;
+						}
+					}
+				}
+			}
+		}
+		return sum;
 	}
 
 	@Override
