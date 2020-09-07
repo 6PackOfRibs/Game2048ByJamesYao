@@ -35,8 +35,38 @@ public class State implements GameState {
 
 	@Override
 	public boolean addTile() {
-		// TODO
-		return false;
+		// counts number of positions with value of 0
+		int zero_count = 0;
+		for (int i = 0; i < boardPositions.length; i++) {
+			if (boardPositions[i] == 0) {
+				zero_count++;
+			}
+		}
+		if (zero_count == 0) {
+			return false;
+		}
+		
+		// create array with size equal to the number of zero positions
+		int zero_positions[] = new int[zero_count];
+		// stores the positions with value of 0
+		int array_pos = 0;
+		for (int i = 0; i < boardPositions.length; i++) {
+			if (boardPositions[i] == 0) {
+				zero_positions[array_pos] = i;
+				array_pos++;
+			}
+		}
+		
+		// sets random position with value of 0 to a random value of 2 or 4
+		int random_pos = (int) ((Math.random() * zero_count));
+		double random_val = Math.random();
+		if (random_val <= 0.5) {
+			boardPositions[zero_positions[random_pos]] = 2;
+		}
+		else {
+		boardPositions[zero_positions[random_pos]] = 4;
+		}
+		return true;
 	}
 
 	@Override
