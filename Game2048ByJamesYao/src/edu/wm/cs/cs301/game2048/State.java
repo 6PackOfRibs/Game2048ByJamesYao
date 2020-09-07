@@ -56,9 +56,12 @@ public class State implements GameState {
 			}
 		}
 		
-		// sets random position with value of 0 to a random value of 2 or 4
+		// calculates the random position
 		int random_pos = (int) ((Math.random() * zero_count));
+		// random double will be converted to random 2 or 4
 		double random_val = Math.random();
+		
+		// sets random position with value of 0 to a random value of 2 or 4
 		if (random_val <= 0.5) {
 			boardPositions[zero_positions[random_pos]] = 2;
 		}
@@ -76,12 +79,14 @@ public class State implements GameState {
 				return false;
 			}
 		}
+		// if there is no empty spot, return true
 		return true;
 	}
 
 	@Override
 	public boolean canMerge() {
 		// check every row and column to see if there are identical values
+		
 		// check every row
 		for (int y = 0; y < 4; y++) {
 			for (int x = 0; x < 4; x++) {
@@ -272,6 +277,7 @@ public class State implements GameState {
 	}
 	
 	public boolean equals(State o) {
+		// if the values on the boards are equal at the same coordinates, return true
 		for (int i = 0; i < boardPositions.length; i++) {
 			if (boardPositions[i] != o.boardPositions[i]) {
 				return false;
