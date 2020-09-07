@@ -20,14 +20,14 @@ public class State implements GameState {
 
 	@Override
 	public void setValue(int x, int y, int value) {
-		// TODO Auto-generated method stub
+		// sets value at (x,y) position
 		boardPositions[x + (4 * y)] = value;
 		
 	}
 
 	@Override
 	public void setEmptyBoard() {
-		// TODO Auto-generated method stub
+		// sets value at all positions to 0
 		for (int i = 0; i < boardPositions.length; i++) {
 			boardPositions[i] = 0;
 		}
@@ -35,14 +35,19 @@ public class State implements GameState {
 
 	@Override
 	public boolean addTile() {
-		// TODO Auto-generated method stub
+		// TODO
 		return false;
 	}
 
 	@Override
 	public boolean isFull() {
-		// TODO Auto-generated method stub
-		return false;
+		// checks if there is an empty spot on board
+		for (int i = 0; i < boardPositions.length; i++) {
+			if (boardPositions[i] == 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
