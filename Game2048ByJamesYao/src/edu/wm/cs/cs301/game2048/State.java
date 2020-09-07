@@ -270,5 +270,14 @@ public class State implements GameState {
 		}
 		return sum;
 	}
+	
+	public boolean equals(State o) {
+		for (int i = 0; i < boardPositions.length; i++) {
+			if (boardPositions[i] != o.boardPositions[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 }
