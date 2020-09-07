@@ -193,7 +193,7 @@ public class State implements GameState {
 					//saves the current value
 					int current_val = getValue(x, y);
 					for (int i = x+1; i < 4; i++) {
-						// if left value is zero, switch values
+						// if right value is zero, switch values
 						if (getValue(i, y) == 0) {
 							setValue(i, y, current_val);
 							setValue(i-1, y, 0);
@@ -213,8 +213,32 @@ public class State implements GameState {
 
 	@Override
 	public int down() {
-		// TODO Auto-generated method stub
-		return 0;
+		// track sum to return at end
+		int sum = 0;
+		// moves every value down, and merges values if they can be merged
+		for (int x = 0; x < 4; x++) {
+			for (int y = 2; y >= 0; y--) {
+				// when value is found, check values below
+				if (getValue(x, y) != 0) {
+					//saves the current value
+					int current_val = getValue(x, y);
+					for (int i = y+1; i < 4; i++) {
+						// if lower value is zero, switch values
+						if (getValue(x, i) == 0) {
+							setValue(x, i, current_val);
+							setValue(x, i-1, 0);
+						}
+						// if values can merge: merge and add value to sum
+						else if (getValue(x, i) == current_val) {
+							setValue(x, i, 2*current_val);
+							setValue(x, i-1, 0);
+							sum += 2*current_val;
+						}
+					}
+				}
+			}
+		}
+		return sum;
 	}
 
 	@Override
