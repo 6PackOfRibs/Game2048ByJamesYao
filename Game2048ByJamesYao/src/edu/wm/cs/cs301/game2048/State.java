@@ -183,8 +183,32 @@ public class State implements GameState {
 
 	@Override
 	public int right() {
-		// TODO Auto-generated method stub
-		return 0;
+		// track sum to return at end
+		int sum = 0;
+		// moves every value to the right, and merges values if they can be merged
+		for (int y = 0; y < 4; y++) {
+			for (int x = 2; x >= 0; x--) {
+				// when value is found, check values to its right
+				if (getValue(x, y) != 0) {
+					//saves the current value
+					int current_val = getValue(x, y);
+					for (int i = x+1; i < 4; i++) {
+						// if left value is zero, switch values
+						if (getValue(i, y) == 0) {
+							setValue(i, y, current_val);
+							setValue(i-1, y, 0);
+						}
+						// if values can merge: merge and add value to sum
+						else if (getValue(i, y) == current_val) {
+							setValue(i, y, 2*current_val);
+							setValue(i-1, y, 0);
+							sum += 2*current_val;
+						}
+					}
+				}
+			}
+		}
+		return sum;
 	}
 
 	@Override
