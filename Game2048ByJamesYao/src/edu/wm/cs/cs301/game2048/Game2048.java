@@ -376,7 +376,7 @@ public class Game2048 extends JPanel {
 				System.out.println("Player uses smart strategy to play");
 				System.out.println("Implement this one for bonus points");
 				System.out.println("Not implemented yet: using manual operation as fallback");
-				// continue in manual mode
+				// Smart player algorithm
 				int smart_delay = 500;
 				ActionListener staskPerformer = new ActionListener() {
 				      public void actionPerformed(ActionEvent evt) {
@@ -390,6 +390,28 @@ public class Game2048 extends JPanel {
 				  			
 				  			// pick a move
 				  			int choice = tmp.decision();
+				  			//algorithm is contained in tmp.decision()
+				  			/**
+				  			 * My algorithm involves a weighted array, which is weighted off of the
+				  			 * log2 base of the values on the board.
+				  			 * It calculates a weighted score for each move and picks the highest one.
+				  			 * 
+				  			 * I weighted scores based off of the values on the board rather than the scores calculated
+				  			 * from moves, because what matters is not the highest score from the next move, but how high 
+				  			 * the score at the top left could be kept.
+				  			 * 
+				  			 * In order to keep the score at the top left as high as possible, my weights follow a path
+				  			 * snaking from the top/left down to the bottom/right.
+				  			 * 
+				  			 * All of the values on lower rows have lower weights than those above it.
+				  			 * 
+				  			 * The weights are as follows:
+				  			 * Highest weights are at the first row, descending as it moves from left to right.
+				  			 * The next highest weights are at the 2nd row, descending as it moves from right to left.
+				  			 * The next highest weights are on the 3rd row, with not much difference between the weights in the row.
+				  			 * The lowest weights are on the 4th row, with not much difference between the weights in the row.
+				  			 * 
+				  			 */
 				  			int count = 1;
 				  			while (tmp.equals(state)) {
 				  				switch (choice) {
