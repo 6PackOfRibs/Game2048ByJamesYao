@@ -322,7 +322,7 @@ public class Game2048 extends JPanel {
 			switch (args[0]) {
 			case "Random":
 				System.out.println("Player uses randomized strategy");
-				int delay = 2000;
+				int delay = 500;
 				ActionListener taskPerformer = new ActionListener() {
 				      public void actionPerformed(ActionEvent evt) {
 				          if (game2048.gameOver()) {
@@ -377,7 +377,55 @@ public class Game2048 extends JPanel {
 				System.out.println("Implement this one for bonus points");
 				System.out.println("Not implemented yet: using manual operation as fallback");
 				// continue in manual mode
-				game2048.manual = true;
+				int smart_delay = 500;
+				ActionListener staskPerformer = new ActionListener() {
+				      public void actionPerformed(ActionEvent evt) {
+				          if (game2048.gameOver()) {
+				        	  System.out.println("Actionlistener recognizes game is over");
+				        	  ((Timer)evt.getSource()).stop();
+				          }
+				          else {
+				        	GameState state = game2048.currentState;
+				  			State tmp = new State((State)state);
+				  			
+				  			// pick a move
+				  			int choice = tmp.decision();
+				  			int count = 1;
+				  			while (tmp.equals(state)) {
+				  				switch (choice) {
+				  				case 0:
+				  					System.out.println("Player: left, attempt: " + count);
+				  					game2048.score += state.left();
+				  					break;
+				  				case 1:
+				  					System.out.println("Player: right, attempt: " + count);
+				  					game2048.score += state.right();
+				  					break;
+				  				case 2: 
+				  					System.out.println("Player: up, attempt: " + count);
+				  					game2048.score += state.up();
+				  					break;
+				  				case 3:
+				  				default:
+				  					System.out.println("Player: down, attempt: " + count);
+				  					game2048.score += state.down();
+				  					break;
+				  				}
+				  				count++;
+				  			}
+				  			// if arrangement of tiles changed, add new tiles as needed
+				  			if (!tmp.equals(state)) {
+				  				for (int i = 0; i < NUMBER_OF_NEW_TILES; i++) {
+				  					state.addTile();
+				  				}
+				  			}
+				  			frame.repaint();
+				          }
+				      }
+				  };
+				final Timer stimer = new Timer(smart_delay,staskPerformer);
+				stimer.start();
+				
 				break;
 			default:
 				System.out.println("Unknown command line parameter: " + args[0]);

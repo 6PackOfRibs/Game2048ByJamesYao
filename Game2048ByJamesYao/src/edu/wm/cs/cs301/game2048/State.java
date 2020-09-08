@@ -303,5 +303,72 @@ public class State implements GameState {
 		}
 		return sum;
 	}
+	
+	// helper methods for analyzing board
+	public int decision() {
+		// track weighted scores
+		int left_score = 0;
+		int right_score = 0;
+		int up_score = 0;
+		int down_score = 0;
+		// see scores after a potential move
+		State temp = new State(this);
+		temp.left();
+		if (!temp.equals(this)) {
+			left_score = weight_score(temp.boardPositions);
+		}
+		
+		temp = new State(this);
+		temp.right();
+		if (!temp.equals(this)) {
+			right_score = weight_score(temp.boardPositions);
+		}
+		
+		temp = new State(this);
+		temp.up();
+		if (!temp.equals(this)) {
+			up_score = weight_score(temp.boardPositions);
+		}
+		
+		temp = new State(this);
+		temp.down();
+		if (!temp.equals(this)) {
+			down_score = weight_score(temp.boardPositions);
+		}
+		// return move (as int) with max score
+		int max_score = Math.max(Math.max(left_score, right_score), Math.max(up_score, down_score));
+		if (max_score == left_score) {
+			return 0;
+		}
+		if (max_score == right_score) {
+			return 1;
+		}
+		if (max_score == up_score) {
+			return 2;
+		}
+		if (max_score == down_score) {
+			return 3;
+		}
+		return 1;
+	}
+	
+	// private method to weight board
+	private int weight_score(int[] curboard) {
+		int weights[] = new int[] {
+				300, 100, 70, 50, 5, 6, 10, 20, 4, 3, 3, 3, 1, 1, 1, 2
+		};
+		int score = 0;
+		int base = 1;
+		for (int i = 0; i < curboard.length; i++) {
+			if (curboard[i] == 0) {
+				base = 0;
+			}
+			else {
+				base = (int) (Math.log(curboard[i]) / Math.log(2));
+			}
+			score += weights[i] * base;
+		}
+		return score;
+	}
 
 }
